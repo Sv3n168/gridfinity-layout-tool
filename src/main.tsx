@@ -33,6 +33,7 @@ import { isScanPath } from '@/features/scan-capture';
 import { applyLandingExperiment, isFirstVisit } from '@/shell/landingExperiment';
 import { installHistoryBaseShim } from '@/shared/utils/appBase';
 import { installHubInbox } from '@/shared/hub/hubInbox';
+import { installHubTheme } from '@/shared/hub/hubTheme';
 
 // Browser page-translation rewraps text nodes under React, which otherwise
 // crashes the reconciler with insertBefore/removeChild NotFoundError. Install
@@ -40,6 +41,7 @@ import { installHubInbox } from '@/shared/hub/hubInbox';
 installTranslationDomGuard();
 installHistoryBaseShim();
 installHubInbox();
+installHubTheme();
 
 // Smoke mode (?smoke=1) boots a synthetic fixture and reports back to a parent listener.
 // Must short-circuit ahead of www-migration paths, which would otherwise reload/redirect
