@@ -97,7 +97,7 @@ export function CreditsFinale({
           style={{ color: '#fff', textShadow: '0 1px 1px rgba(34,34,34,0.15)' }}
         >
           <img
-            src="/kofi-cup.png"
+            src={`${import.meta.env.BASE_URL}kofi-cup.png`}
             alt=""
             aria-hidden="true"
             className="kofi-cup-wiggle h-4 w-auto"

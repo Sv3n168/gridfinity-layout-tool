@@ -8,7 +8,7 @@
  * - Portrait tablet/mobile: PreviewCanvas (40-50vh) / ParameterPanel
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ParameterPanel } from '@/features/bin-designer/components/ParameterPanel';
 import { PreviewCanvas } from '@/features/bin-designer/components/PreviewCanvas';
 import { CutoutWorkspace } from '@/features/bin-designer/components/CutoutWorkspace';
@@ -22,6 +22,8 @@ import { VariantLock } from '@/features/bin-designer/components/panel/VariantSec
 import { useDesignerStore } from '@/features/bin-designer/store';
 import { useVariantContext } from '@/features/bin-designer/hooks/useVariantContext';
 import { openParentDesign } from '@/features/bin-designer/utils/openParentDesign';
+import { hasPendingHubFiles, subscribeHubInbox } from '@/shared/hub/hubInbox';
+import { resolveConstraints } from '@/shared/constraints';
 
 interface DesignerMainContentProps {
   isDesktop: boolean;
@@ -40,6 +42,45 @@ export function DesignerMainContent({
 }: DesignerMainContentProps) {
   const [splitRatio, setSplitRatio] = useState(loadSplitRatio);
   const currentDesignId = useDesignerStore((s) => s.currentDesignId);
+
+  // A mesh or outline handed over by the hub is imported by the cutout editor,
+  // which only cuts into a solid bin: switch to one the way the Interior card
+  // does, as an undoable edit, then open the editor. Only once the design has
+  // settled: until the URL carries the open design's id, URL sync may still
+  // load it again, which replaces params and closes the editor mid-import.
+  const designReady = currentDesignId !== null;
+  useEffect(() => {
+    if (!designReady) return undefined;
+    let settled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const startedAt = Date.now();
+    const openForHubFiles = (): void => {
+      if (!settled || !hasPendingHubFiles()) return;
+      const { params, setParams, setCutoutEditorOpen } = useDesignerStore.getState();
+      if (params.style !== 'solid') {
+        setParams(resolveConstraints(params, { feature: 'style.solid', enabled: true }).params);
+      }
+      setCutoutEditorOpen(true);
+    };
+    const waitForSettle = (): void => {
+      const urlId = new URLSearchParams(window.location.search).get('id');
+      const openId = useDesignerStore.getState().currentDesignId;
+      if (urlId === openId || Date.now() - startedAt > 10_000) {
+        timer = setTimeout(() => {
+          settled = true;
+          openForHubFiles();
+        }, 500);
+        return;
+      }
+      timer = setTimeout(waitForSettle, 200);
+    };
+    waitForSettle();
+    const unsubscribe = subscribeHubInbox(openForHubFiles);
+    return () => {
+      clearTimeout(timer);
+      unsubscribe();
+    };
+  }, [designReady]);
   const variant = useVariantContext(currentDesignId);
 
   // Both workspaces replace the sidebar and share the split ratio, so they

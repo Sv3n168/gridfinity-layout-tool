@@ -71,7 +71,7 @@ export function ExportSupportPrompt({ fileName, onDone, source }: ExportSupportP
         onClick={handleKofi}
         leftIcon={
           <img
-            src="/kofi-cup.png"
+            src={`${import.meta.env.BASE_URL}kofi-cup.png`}
             alt=""
             aria-hidden="true"
             className="kofi-cup-wiggle h-4 w-auto"

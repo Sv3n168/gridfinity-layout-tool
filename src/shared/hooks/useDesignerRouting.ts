@@ -8,6 +8,7 @@
  * - Bookmarkable design URLs
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { useState, useEffect, useCallback } from 'react';
 
 // The routing helpers re-dispatch popstate after pushState so route listeners
@@ -33,7 +34,7 @@ export function isSyntheticPopstate(): boolean {
  * Check if the current URL is the designer route.
  */
 export function isDesignerPath(): boolean {
-  return window.location.pathname === '/designer' || window.location.pathname === '/designer/';
+  return appPathname() === '/designer' || appPathname() === '/designer/';
 }
 
 /**

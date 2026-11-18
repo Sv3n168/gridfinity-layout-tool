@@ -5,11 +5,12 @@
  * Mirrors useBaseplateRouting but takes no query params.
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { useState, useEffect, useCallback } from 'react';
 import { dispatchSyntheticPopstate } from './useDesignerRouting';
 
 function isSupportersPath(): boolean {
-  return window.location.pathname === '/supporters' || window.location.pathname === '/supporters/';
+  return appPathname() === '/supporters' || appPathname() === '/supporters/';
 }
 
 export function useSupportersRouting() {

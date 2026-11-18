@@ -137,7 +137,7 @@ export function CreditsControls({
           className="gap-1.5 px-2.5 text-xs opacity-75 hover:opacity-100"
           style={{ color: 'inherit' }}
         >
-          <img src="/kofi-cup.png" alt="" aria-hidden="true" className="h-3.5 w-auto" />
+          <img src={`${import.meta.env.BASE_URL}kofi-cup.png`} alt="" aria-hidden="true" className="h-3.5 w-auto" />
           {t('supporters.cta.button')}
         </Button>
       </div>

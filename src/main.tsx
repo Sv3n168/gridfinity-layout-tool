@@ -31,11 +31,15 @@ import { isSmokeMode } from '@/shared/utils/smokeMode';
 import { installTranslationDomGuard } from '@/shared/utils/translationDomGuard';
 import { isScanPath } from '@/features/scan-capture';
 import { applyLandingExperiment, isFirstVisit } from '@/shell/landingExperiment';
+import { installHistoryBaseShim } from '@/shared/utils/appBase';
+import { installHubInbox } from '@/shared/hub/hubInbox';
 
 // Browser page-translation rewraps text nodes under React, which otherwise
 // crashes the reconciler with insertBefore/removeChild NotFoundError. Install
 // the guard before any DOM is created so every boot path is covered.
 installTranslationDomGuard();
+installHistoryBaseShim();
+installHubInbox();
 
 // Smoke mode (?smoke=1) boots a synthetic fixture and reports back to a parent listener.
 // Must short-circuit ahead of www-migration paths, which would otherwise reload/redirect

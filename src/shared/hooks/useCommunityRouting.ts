@@ -14,6 +14,7 @@
  * the tool switcher for leaving.
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { useState, useEffect, useCallback } from 'react';
 import { dispatchSyntheticPopstate } from './useDesignerRouting';
 
@@ -27,11 +28,11 @@ interface CommunityDetailHistoryState {
 }
 
 function isCommunityGalleryPath(): boolean {
-  return window.location.pathname === '/community' || window.location.pathname === '/community/';
+  return appPathname() === '/community' || appPathname() === '/community/';
 }
 
 export function getCommunityDesignIdFromUrl(): string | null {
-  const match = COMMUNITY_DETAIL_RE.exec(window.location.pathname);
+  const match = COMMUNITY_DETAIL_RE.exec(appPathname());
   return match === null ? null : match[1];
 }
 
@@ -73,7 +74,7 @@ export function syncCommunityGalleryQuery(query: string): void {
   window.history.replaceState(
     window.history.state,
     '',
-    `${window.location.pathname}${query === '' ? '' : `?${query}`}`
+    `${appPathname()}${query === '' ? '' : `?${query}`}`
   );
 }
 

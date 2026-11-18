@@ -9,6 +9,7 @@
  * - Result-based imports (*Result suffix)
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { validateImport } from '@/shared/utils/validation';
 import { isValidLayoutId, isLegacyUUID } from '@/shared/utils/uuid';
 import { generateBinId, generateLayerId, generateCategoryId, STAGING_ID } from '@/core/constants';
@@ -719,7 +720,7 @@ export function clearSharedLayoutFromURL(): void {
 export function getCloudShareIdFromURL(): string | null {
   if (typeof window === 'undefined') return null;
 
-  const pathname = window.location.pathname;
+  const pathname = appPathname();
 
   const match = pathname.match(/^\/l\/([^/]+)(?:\/.*)?$/);
   if (!match) return null;

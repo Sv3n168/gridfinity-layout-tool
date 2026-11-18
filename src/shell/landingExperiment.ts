@@ -1,3 +1,4 @@
+import { stripAppBase } from '@/shared/utils/appBase';
 import { useSettingsStore } from '@/core/store/settings';
 import {
   ANALYTICS_STORAGE_KEY,
@@ -31,7 +32,7 @@ export function isFirstVisit(): boolean {
 }
 
 function isBareRoot(url: URL): boolean {
-  if (url.pathname !== '/' || url.hash !== '') return false;
+  if (stripAppBase(url.pathname) !== '/' || url.hash !== '') return false;
   for (const key of url.searchParams.keys()) {
     if (!key.startsWith('utm_') && !NEUTRAL_PARAMS.has(key)) return false;
   }

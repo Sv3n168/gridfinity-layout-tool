@@ -5,16 +5,18 @@
  * route and hand off to the isolated `scanBoot` chunk.
  */
 
+import { appPathname } from '@/shared/utils/appBase';
+
 // UUID v4 only — matches `isValidScanToken` and the `/scan/:token` Vercel rewrite,
 // so invalid paths aren't treated as scan routes.
 const SCAN_PATH_RE =
   /^\/scan\/([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\/?$/i;
 
-export function isScanPath(pathname: string = window.location.pathname): boolean {
+export function isScanPath(pathname: string = appPathname()): boolean {
   return SCAN_PATH_RE.test(pathname);
 }
 
-export function getScanToken(pathname: string = window.location.pathname): string | null {
+export function getScanToken(pathname: string = appPathname()): string | null {
   const match = pathname.match(SCAN_PATH_RE);
   if (!match) return null;
   try {

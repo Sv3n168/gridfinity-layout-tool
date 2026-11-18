@@ -56,7 +56,24 @@ const collectEagerChunks = (): PluginOption => ({
 });
 
 // https://vite.dev/config/
+// PrintForge hub build: served under a sub-path, inside the hub, without a service worker.
+const HUB_BUILD = process.env.VITE_HUB === '1';
+const SELF_HOSTED = process.env.VITE_SELF_HOSTED === '1';
+
+// A self-hosted image must not reach out to third parties: the font stylesheet and
+// the hints for hosted services go, and the monospace stack falls back to system fonts.
+const stripExternalHead = (): PluginOption => ({
+  name: 'strip-external-head',
+  apply: 'build',
+  transformIndexHtml: {
+    order: 'post',
+    handler: (html) =>
+      SELF_HOSTED ? html.replace(/\s*<link\b[^>]*\bhref="https:\/\/[^"]*"[^>]*>/g, '') : html,
+  },
+});
+
 export default defineConfig({
+  base: process.env.VITE_BASE ?? '/',
   server: {
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -102,7 +119,9 @@ export default defineConfig({
     mediapipeAssetsPlugin(),
     minifyJsonAssets(),
     collectEagerChunks(),
+    stripExternalHead(),
     VitePWA({
+      disable: HUB_BUILD,
       // 'prompt' so the smoke gate (src/shared/pwa/smokeGate.ts) controls activation.
       // With 'autoUpdate' the new SW would auto-skip-waiting on install, defeating the gate.
       registerType: 'prompt',

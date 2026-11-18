@@ -19,6 +19,7 @@ import { MAX_SVG_FILE_SIZE } from './types';
 import type { SvgImportErrorCode } from './types';
 import { byDescendingArea } from '../importStackOrder';
 import { generateUUID } from '@/shared/utils/uuid';
+import { useHubFiles } from '@/shared/hub/hubInbox';
 
 /** Maps error codes to i18n toast keys. */
 const ERROR_TOAST_KEYS: Record<SvgImportErrorCode, string> = {
@@ -159,6 +160,8 @@ export function useSvgImport(): UseSvgImportReturn {
   );
 
   // Keep ref in sync with latest handleFile
+  useHubFiles('svg', handleFile);
+
   useEffect(() => {
     handleFileRef.current = handleFile;
   }, [handleFile]);

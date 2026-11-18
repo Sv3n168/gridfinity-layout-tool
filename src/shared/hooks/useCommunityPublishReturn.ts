@@ -1,3 +1,4 @@
+import { appPathname } from '@/shared/utils/appBase';
 import { useEffect } from 'react';
 import { useTranslation } from '@/i18n';
 import { useSessionStore } from '@/core/sync/session/useSession';
@@ -9,7 +10,7 @@ import {
 import { dispatchSyntheticPopstate } from './useDesignerRouting';
 
 function onDesignerRoute(designId: string): boolean {
-  const path = window.location.pathname;
+  const path = appPathname();
   if (path !== '/designer' && path !== '/designer/') return false;
   return new URLSearchParams(window.location.search).get('id') === designId;
 }

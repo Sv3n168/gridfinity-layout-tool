@@ -13,6 +13,7 @@
  * - #share={data} - URL-encoded shares (self-contained)
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { isValidLayoutId, isLegacyUUID } from '@/shared/utils';
 import { slugify } from './slug';
 
@@ -30,7 +31,7 @@ const LAYOUT_PATH_PREFIX = '/l/';
  * Handles both new format (/l/{id}/{slug}) and legacy formats.
  */
 export function parseLayoutFromURL(): { layoutId: string; slug: string | null } | null {
-  const pathname = window.location.pathname;
+  const pathname = appPathname();
   const hash = window.location.hash;
 
   // Check for legacy URL-encoded share (takes highest precedence)
@@ -77,7 +78,7 @@ export function setLayoutURL(layoutId: string, layoutName: string, addToHistory 
   const newPath = `${LAYOUT_PATH_PREFIX}${layoutId}/${slug}`;
 
   // Skip if URL is already correct
-  if (window.location.pathname === newPath) {
+  if (appPathname() === newPath) {
     return;
   }
 
@@ -93,7 +94,7 @@ export function setLayoutURL(layoutId: string, layoutName: string, addToHistory 
  * Used when entering a transient state like shared preview.
  */
 export function clearLayoutURL(): void {
-  if (window.location.pathname !== '/') {
+  if (appPathname() !== '/') {
     window.history.replaceState({}, '', '/');
   }
 }

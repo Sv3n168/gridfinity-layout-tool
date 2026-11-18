@@ -5,6 +5,7 @@
  * Provides navigateToBaseplate() for programmatic navigation.
  */
 
+import { appPathname } from '@/shared/utils/appBase';
 import { useState, useEffect, useCallback } from 'react';
 import { dispatchSyntheticPopstate } from './useDesignerRouting';
 
@@ -12,7 +13,7 @@ import { dispatchSyntheticPopstate } from './useDesignerRouting';
  * Check if the current URL is the baseplate route.
  */
 function isBaseplatePath(): boolean {
-  return window.location.pathname === '/baseplate' || window.location.pathname === '/baseplate/';
+  return appPathname() === '/baseplate' || appPathname() === '/baseplate/';
 }
 
 /**

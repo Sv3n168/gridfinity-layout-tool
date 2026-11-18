@@ -1,7 +1,8 @@
+import { appPathname } from '@/shared/utils/appBase';
 import { useEffect, useState } from 'react';
 
 function isLabelsPath(): boolean {
-  return window.location.pathname === '/labels' || window.location.pathname === '/labels/';
+  return appPathname() === '/labels' || appPathname() === '/labels/';
 }
 
 export function useLabelsRouting(): { isLabelsRoute: boolean } {

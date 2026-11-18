@@ -30,6 +30,7 @@ import { storeMeshAsset } from '@/shared/generation/meshRefs';
 import { defaultEntryChamfer } from '@/features/bin-designer/types';
 import { cutoutInterior } from '@/features/bin-designer/utils/binDimensions';
 import { generateUUID } from '@/shared/utils/uuid';
+import { useHubFiles } from '@/shared/hub/hubInbox';
 
 /** Default insertion clearance (mm) for an imported tool, matching scans. */
 const STL_DEFAULT_CLEARANCE_MM = 0.4;
@@ -160,6 +161,8 @@ export function useStlImport(): UseStlImportReturn {
     },
     [addToast, t, runImport]
   );
+
+  useHubFiles('stl', handleFile);
 
   const setAxisRotation = useCallback(
     (axis: keyof MeshImportRotation, degrees: number) => {

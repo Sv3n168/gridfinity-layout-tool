@@ -297,7 +297,7 @@ export function HeaderSupportLinks({
         title={t('header.supportOnKofi')}
         aria-label={t('header.supportOnKofi')}
       >
-        <img src="/kofi-cup.png" alt="" aria-hidden="true" className="kofi-cup-wiggle h-4 w-auto" />
+        <img src={`${import.meta.env.BASE_URL}kofi-cup.png`} alt="" aria-hidden="true" className="kofi-cup-wiggle h-4 w-auto" />
         <span className="hidden xl:inline">{t('header.supportOnKofi')}</span>
       </Button>
     </>
